@@ -1,0 +1,33 @@
+.Dd March 23, 2024
+.Dt keyMouse 1
+.Os
+.Sh NAME
+.Nm keyMouse
+.Nd small program to control the mouse using the keyboard.
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+.Nm
+is a small utility to control the mouse using the keyboard.
+
+It grabs the keyboard and moves/clicks the cursor according
+to the keybindings specified (hjkl and asd for mouse l/m/r
+by default).
+
+The cursor moves
+.Ar MOVEMENT
+(default 5) pixels per keypress. This is multiplied by
+.Ar MULTIPLIER
+(default 5) for each modifier key pressed down. The
+modifier keys are also passed through and otherwise act
+normally.
+
+Pressing any unbound key, ungrabs the keyboard and exits.
+.Sh EXIT STATUS
+.Nm
+exits 1 on error and outputs the error to stderr.
+.Sh CUSTOMIZATION
+.Nm
+can be customized be editing the variables under
+.Ar /* config */
+near the top of the source, and recompiling.
