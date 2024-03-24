@@ -14,7 +14,6 @@
 |* You should have received a copy of the GNU General Public License      *|
 \* along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#include <X11/Xlib.h>
 #define _POSIX_C_SOURCE 200809L
 
 #include <errno.h>
@@ -22,8 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <X11/Xutil.h>
 #include <X11/keysym.h>
+#include <X11/Xutil.h>
 #include <X11/extensions/XTest.h>
 
 /* config */
