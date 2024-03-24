@@ -39,7 +39,6 @@
 	const int MULTIPLIER = 5;
 /* end config */
 
-static void click(Display *dpy, unsigned int button, int state);
 static void die(const char *errstr, ...);
 static void move(Display *dpy, int x, int y, unsigned int mod);
 
@@ -87,15 +86,15 @@ main()
 				break;
 
 			case BUTTONL:
-				click(dpy, 1, 1);
+				XTestFakeButtonEvent(dpy, 1, 1, CurrentTime);
 				break;
 
 			case BUTTONM:
-				click(dpy, 2, 1);
+				XTestFakeButtonEvent(dpy, 2, 1, CurrentTime);
 				break;
 
 			case BUTTONR:
-				click(dpy, 3, 1);
+				XTestFakeButtonEvent(dpy, 3, 1, CurrentTime);
 				break;
 
 			case XK_Alt_L:
@@ -125,15 +124,15 @@ main()
 
 			switch (ksym) {
 			case BUTTONL:
-				click(dpy, 1, 0);
+				XTestFakeButtonEvent(dpy, 1, 0, CurrentTime);
 				break;
 
 			case BUTTONM:
-				click(dpy, 2, 0);
+				XTestFakeButtonEvent(dpy, 2, 0, CurrentTime);
 				break;
 
 			case BUTTONR:
-				click(dpy, 3, 0);
+				XTestFakeButtonEvent(dpy, 3, 0, CurrentTime);
 				break;
 
 			default:
@@ -149,13 +148,6 @@ main()
 	XCloseDisplay(dpy);
 
 	return 0;
-}
-
-static void
-click(Display *dpy, unsigned int button, int state)
-{
-	if (!XTestFakeButtonEvent(dpy, button, state, CurrentTime))
-		die ("mouse click failed: %s", strerror(errno));
 }
 
 static void
@@ -194,6 +186,5 @@ move(Display *dpy, int x, int y, unsigned int mod)
 	if (mod & Mod5Mask)
 		mult *= MULTIPLIER;
 
-	if (!XWarpPointer(dpy, None, None, 0, 0, 0, 0, x * mult, y * mult))
-		die("pointer warp failed: %s", strerror(errno));
+	XWarpPointer(dpy, None, None, 0, 0, 0, 0, x * mult, y * mult);
 }
