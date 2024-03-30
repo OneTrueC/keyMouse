@@ -14,6 +14,8 @@ Info
 **keyMouse** grabs the keyboard and moves/clicks the cursor according to the keybindings
 specified (`hjkl` and `asd` for mouse l/m/r by default).
 
+It waits `STARTUPTIME` before grabing the keyboard.
+
 The cursor moves `MOVEMENT` (default 5) pixels per keypress. This is multiplied
 by `MULTIPLIER` (default 5) for each modifier key pressed down. The modifier
 keys are also passed through and otherwise act normally.

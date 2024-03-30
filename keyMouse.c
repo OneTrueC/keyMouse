@@ -16,14 +16,17 @@
 
 #define _POSIX_C_SOURCE 200809L
 
-#include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <errno.h>
 #include <string.h>
+#include <time.h>
+
+#include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
-#include <X11/extensions/XTest.h>
 
 /* config */
 #	define UP XK_k
@@ -35,6 +38,7 @@
 #	define BUTTONM XK_s
 #	define BUTTONR XK_d
 
+	const struct timespec STARTDELAY = { 0, 50000000 };
 	const int MOVEMENT = 5;
 	const int MULTIPLIER = 5;
 /* end config */
@@ -58,6 +62,8 @@ main()
 		die("display open failed: %s", strerror(errno));
 
 	root = DefaultRootWindow(dpy);
+
+	nanosleep(&STARTDELAY, (struct timespec*)&STARTDELAY);
 
 	grab = XGrabKeyboard(dpy, root, True, GrabModeAsync, GrabModeAsync,
 	                     CurrentTime);
