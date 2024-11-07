@@ -13,7 +13,6 @@
 |*                                                                        *|
 |* You should have received a copy of the GNU General Public License      *|
 \* along with this program.  If not, see <https://www.gnu.org/licenses/>. */
-
 #define _POSIX_C_SOURCE 200809L
 
 #include <stdarg.h>
@@ -38,7 +37,13 @@
 #	define BUTTONM XK_s
 #	define BUTTONR XK_d
 
-	const struct timespec STARTDELAY = { 0, 50000000 };
+#	define SCROLU XK_w
+#	define SCROLD XK_x
+#	define SCROLR XK_e
+#	define SCROLL XK_q
+
+	const struct timespec STARTDELAY = { 0, 10e7 };
+
 	const int MOVEMENT = 5;
 	const int MULTIPLIER = 5;
 /* end config */
@@ -71,7 +76,8 @@ main()
 		die("keyboard grab failed: %s", strerror(errno));
 
 	while (running && !XNextEvent(dpy, &ev)) {
-		if (ev.type == KeyPress) {
+		switch (ev.type) {
+		case KeyPress:
 			ksym = XLookupKeysym(&ev.xkey, 0);
 
 			switch (ksym) {
@@ -103,6 +109,22 @@ main()
 				XTestFakeButtonEvent(dpy, 3, 1, CurrentTime);
 				break;
 
+			case SCROLU:
+				XTestFakeButtonEvent(dpy, 4, 1, CurrentTime);
+				break;
+
+			case SCROLD:
+				XTestFakeButtonEvent(dpy, 5, 1, CurrentTime);
+				break;
+
+			case SCROLL:
+				XTestFakeButtonEvent(dpy, 6, 1, CurrentTime);
+				break;
+
+			case SCROLR:
+				XTestFakeButtonEvent(dpy, 7, 1, CurrentTime);
+				break;
+
 			case XK_Alt_L:
 			case XK_Alt_R:
 			case XK_Control_L:
@@ -125,7 +147,9 @@ main()
 				running = 0;
 				break;
 			}
-		} else if (ev.type == KeyRelease) {
+			break;
+
+		case KeyRelease:
 			ksym = XLookupKeysym(&ev.xkey, 0);
 
 			switch (ksym) {
@@ -141,7 +165,20 @@ main()
 				XTestFakeButtonEvent(dpy, 3, 0, CurrentTime);
 				break;
 
-			default:
+			case SCROLU:
+				XTestFakeButtonEvent(dpy, 4, 0, CurrentTime);
+				break;
+
+			case SCROLD:
+				XTestFakeButtonEvent(dpy, 5, 0, CurrentTime);
+				break;
+
+			case SCROLL:
+				XTestFakeButtonEvent(dpy, 6, 0, CurrentTime);
+				break;
+
+			case SCROLR:
+				XTestFakeButtonEvent(dpy, 7, 0, CurrentTime);
 				break;
 			}
 		}
