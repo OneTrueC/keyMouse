@@ -22,11 +22,6 @@ keys are also passed through and otherwise act normally.
 
 Pressing any unbound key, ungrabs the keyboard and exits.
 
-Running
--------
-In some cases (I don't know which) it may be necessary to abstract the
-execution of **keyMouse** with a shell script.
-
 Exit Status
 -----------
 **keyMouse** exits 1 on error and prints the error to stderr.
