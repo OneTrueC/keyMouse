@@ -1,5 +1,5 @@
 /* a small program to control the cursor with the keyboard in x11         *\
-|* Copyright (C) 2024  Andrew Charles Marino                              *|
+|* Copyright (C) 2025  Andrew Charles Marino                              *|
 |*                                                                        *|
 |* This program is free software: you can redistribute it and/or modify   *|
 |* it under the terms of the GNU General Public License as published by   *|
@@ -22,6 +22,8 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+
+#include <unistd.h>
 
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
@@ -48,23 +50,33 @@
 	const int MULTIPLIER = 5;
 /* end config */
 
-static void die(const char *errstr, ...);
+static void die(int code, const char *errstr, ...);
 static void move(Display *dpy, int x, int y, unsigned int mod);
+static void version(void);
+
+const char* shortopts = "v";
 
 int
-main()
+main(int argc, char** argv)
 {
-	char running;
 	Display *dpy;
-	int grab;
+	int opt, grab, running;
 	KeySym ksym;
 	Window root;
 	XEvent ev;
 
+	while ((opt = getopt(argc, argv, shortopts)) != -1) {
+		switch (opt) {
+		case 'v':
+			version();
+			return 0;
+		}
+	}
+
 	running = 1;
 
 	if ((dpy = XOpenDisplay(NULL)) == NULL)
-		die("display open failed: %s", strerror(errno));
+		die(1, "display open failed: %s", strerror(errno));
 
 	root = DefaultRootWindow(dpy);
 
@@ -73,7 +85,7 @@ main()
 	grab = XGrabKeyboard(dpy, root, True, GrabModeAsync, GrabModeAsync,
 	                     CurrentTime);
 	if (grab != GrabSuccess)
-		die("keyboard grab failed: %s", strerror(errno));
+		die(2, "keyboard grab failed: %s", strerror(errno));
 
 	while (running && !XNextEvent(dpy, &ev)) {
 		switch (ev.type) {
@@ -185,7 +197,7 @@ main()
 	}
 
 	if (running)
-		die("getting event failed: %s", strerror(errno));
+		die(3, "getting event failed: %s", strerror(errno));
 
 	XUngrabKeyboard(dpy, CurrentTime);
 	XCloseDisplay(dpy);
@@ -194,17 +206,17 @@ main()
 }
 
 static void
-die(const char *errstr, ...)
+die(int code, const char *errstr, ...)
 {
 	va_list ap;
 
 	va_start(ap, errstr);
-	fprintf(stderr, "keyMouse: ");
+	fprintf(stderr, NAME": ");
 	vfprintf(stderr, errstr, ap);
 	fprintf(stderr, "\n");
 	va_end(ap);
 
-	exit(1);
+	exit(code);
 }
 
 static void
@@ -230,4 +242,10 @@ move(Display *dpy, int x, int y, unsigned int mod)
 		mult *= MULTIPLIER;
 
 	XWarpPointer(dpy, None, None, 0, 0, 0, 0, x * mult, y * mult);
+}
+
+static void version(void)
+{
+	puts(NAME" v"VERSION"\n"
+	     "written and GPL'd by Drew Marino (OneTrueC)");
 }
