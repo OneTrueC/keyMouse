@@ -1,5 +1,3 @@
-mouse utility\"
-
 # NAME
 
 **keymouse** - small program to control the mouse using the keyboard.
