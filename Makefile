@@ -29,7 +29,7 @@ install: ${NAME}
 
 uninstall:
 	rm -f /usr/bin/${NAME}
-	rm -f /usr/share/man/man1/${NAME}.1.gz
+	rm -f ${MANDIR}/${NAME}.1
 
 clean:
 	rm -f ${NAME}
